@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiew</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Updated CSS styles for your homepage */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #EBBBB1;
+            text-align: center;
+            margin: auto;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            min-height: 100vh; /* Make the body take up the full viewport height */
+        }
+        .left-half {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .right-half {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: rgb(60, 56, 56);
+            text-transform: uppercase;
+        }
+        p {
+            font-size: 20px;
+            font-weight: 400;
+            color: rgb(60, 56, 56);
+            margin-top: 20px;
+            transition: opacity 0.3s ease;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 22px;
+            font-weight: 600;
+            color: rgb(60, 56, 56);
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            animation: floatAnimation 2s infinite; /* Apply the floating animation */
+        }
+        @keyframes floatAnimation {
+            0%, 100% {
+                transform: translateY(0); /* Start and end position (no vertical movement) */
+            }
+            50% {
+                transform: translateY(-20px); /* Middle of the animation, move up */
+            }
+        }
+
+        /* Media Query for smaller screens */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .left-half, .right-half {
+                order: 0; /* Reset the order for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-half">
+        <h1>Welcome to the Professor Review System</h1>
+        <p class="quote">"The mediocre teacher tells. <br>The good teacher explains. <br>The superior teacher demonstrates. <br>The great teacher inspires." - William Arthur Ward</p>
+        <a href="{% url 'login' %}" class="button">LOGIN</a>
+        <p class="quote">Because even professors need grades...<br>Let's dish out some A+ honesty!</p>
+        <a href="{% url 'register' %}" class="button">SIGN UP</a>
+    </div>
+    <div class="right-half">
+        <img src="{% static 'images/Room-3d.jpg' %}" alt="Image...">
+    </div>
+</body>
+</html>

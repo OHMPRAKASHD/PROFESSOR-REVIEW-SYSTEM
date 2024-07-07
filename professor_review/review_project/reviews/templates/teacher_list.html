@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Teachers</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Global styles */
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background-color: #87A1CE;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: white;
+            margin: 20px;
+        }
+
+        /* Cool CSS effects */
+        ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        li {
+            margin: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        li a {
+            text-decoration: none;
+            display: block;
+            padding: 20px;
+            background-color: wheat;
+            color: #333;
+        }
+
+        li a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Search box styles */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px;
+        }
+
+        .search-input {
+            padding: 10px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            outline: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .search-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        div.header {
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        a.button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        a.button:hover {
+            transform: scale(1.05);
+        }
+
+        .bottom {
+            text-align: center; /* Center the image horizontally */
+            margin-top: 20px; /* Add some space between the <ul> and the image */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        img {
+            animation: floatAnimation 2s infinite; /* Apply the floating animation */
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% {
+                transform: translateY(0); /* Start and end position (no vertical movement) */
+            }
+            50% {
+                transform: translateY(-20px); /* Middle of the animation, move up */
+            }
+        }
+
+        /* Media queries for responsiveness */
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            .search-input {
+                max-width: 250px;
+            }
+
+            img {
+                margin-top: 50px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 30px;
+                margin-top: 50px;
+            }
+
+            .search-input {
+                max-width: 250px;
+            }
+
+            ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            li {
+                width: 60%;
+                display: none;
+            }
+
+            img {
+                margin-top: 50px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div class="header">
+            {% if user.is_authenticated %}
+                <p>Welcome, <b>{{ user.username }}</b>!</p>
+                <a href="{% url 'logout' %}" class="button">Logout</a> <!-- Styled as a button -->
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
+        </div>
+        <h1>PROFESSORS</h1>
+        <!-- Search box -->
+        <div class="search-container">
+            <input type="text" id="teacher-search" class="search-input" placeholder="Search by Professor Name">
+            <!-- <button id="search-button" class="search-button">Search</button> -->
+        </div>
+        <ul>
+            {% for teacher in teachers %}
+                <li>
+                    <a href="{% url 'teacher_detail' teacher.id %}">
+                        {{ teacher.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="bottom">
+        <img src="{% static 'images/Girl Laptop.png' %}" alt="Image..." height="500px" width="1000px">
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById("teacher-search");
+            const teacherList = document.querySelectorAll("li");
+    
+            // Event listener for the search input
+            searchInput.addEventListener("input", function() {
+                const searchText = searchInput.value.toLowerCase();
+    
+                teacherList.forEach(function(teacher) {
+                    const teacherName = teacher.textContent.toLowerCase();
+                    if (searchText === "") {
+                        teacher.style.display = "none"; // Hide all teachers if search is empty
+                    } else if (teacherName.includes(searchText)) {
+                        teacher.style.display = "block";
+                    } else {
+                        teacher.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+   
+</body>
+</html>

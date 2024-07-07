@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ teacher.name }} - Teacher Detail</title>
+    <style>
+        /* Reset some default styles */
+        body, ul {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Set a max-width and center the content */
+        body {
+            background-color: #87A1CE;
+            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Helvetica', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Style the header section */
+        div.header {
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s, transform 0.3s;
+            /* backdrop-filter: blur(10px); */
+        }
+
+        /* Style the login/logout links */
+        a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #ffc107;
+        }
+
+        /* Style the "Add Review" and "Logout" buttons */
+        a.button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        a.button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Style the reviews section */
+        h2 {
+            font-size: 42px;
+            margin: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        ul {
+            list-style: none;
+            margin: 20px;
+        }
+
+        li {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style the department name */
+        p.department {
+            font-size: 28px;
+            text-align: center;
+            margin: 10px;
+            color: white;
+        }
+
+        /* Style the "Edit" button in green */
+        a.edit-button {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        /* Style the "Delete" button in red */
+        a.delete-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        a.logout-button {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        p.reviews-title {
+            font-size: 24px; /* Adjust the font size as needed */
+            text-align: center;
+            font-weight: bold;
+            margin: 20px 0; /* Add some vertical spacing */
+            color: white;
+        }
+
+        /* Responsive design for smaller screens */
+        @media screen and (max-width: 768px) {
+            div.header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            h2 {
+                font-size: 32px;
+            }
+
+            a {
+                margin: 10px 0;
+                padding: 5px 10px;
+                font-size: 16px;
+            }
+
+            a.button {
+                margin: 10px 0;
+            }
+
+            p.department {
+                font-size: 16px;
+            }
+
+            li {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if user.is_authenticated %}
+            <p>Welcome, <b>{{ user.username }}</b>!</p>
+            <a href="{% url 'logout' %}" class="button logout-button">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+    <h2>{{ teacher.name }} (Rating: {{ average_rating|default:"N/A"|floatformat:"1" }})<br><p class="department">{{ teacher.department }}</p></h2>
+    <div style="float: right;">
+        <label for="rating-filter">Filter by Rating:</label>
+        <select id="rating-filter">
+            <option value="all">All</option>
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
+        </select>
+    </div>
+    
+    <a href="{% url 'add_review' teacher.id %}" class="button">Add Review</a>
+    <a href="{% url 'teacher_list' %}" class="button">Back</a>
+    <p class="reviews-title">Reviews</p>
+    <div id="no-reviews-container" style="display: none; text-align: center;">
+        <p id="no-reviews" style="font-size: 24px; font-weight: bold; color: #76ff76;">No reviews found.</p>
+    </div>    
+    <ul>
+        {% for review in reviews %}
+            {% if review.user == user %}
+                <!-- Display logged-in user's review at the beginning -->
+                <li class="review" data-rating="{{ review.rating }}">
+                    <p>User: You</p>
+                    <p>Rating: {{ review.rating }}</p>
+                    <p>Comment: {{ review.comment }}</p>
+                    <a href="{% url 'edit_review' teacher.id review.id %}" class="button edit-button">Edit</a>
+                    <a href="{% url 'delete_review' teacher.id review.id %}" class="button delete-button" onclick="return confirm('Are you sure you want to delete this review?')">Delete</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% for review in reviews %}
+            {% if review.user != user %}
+                <!-- Display other reviews -->
+                <li class="review" data-rating="{{ review.rating }}">
+                    <p>User: 
+                        {% if review.user.is_superuser %}
+                            {{ review.user.username }} (Founder)
+                        {% else %}
+                            {{ review.user.username }}
+                        {% endif %}
+                    </p>
+                    <p>Rating: {{ review.rating }}</p>
+                    <p>Comment: {{ review.comment }}</p>
+                </li>
+            {% endif %}
+        {% empty %}
+            <!-- Display a message if no reviews are found -->
+            <p>No reviews available.</p>
+        {% endfor %}
+    </ul>    
+    <script>
+        // Function to filter reviews based on the selected rating
+        function filterReviewsByRating() {
+            var selectedRating = document.getElementById("rating-filter").value;
+            var reviews = document.querySelectorAll(".review");
+            var noReviewsContainer = document.getElementById("no-reviews-container"); // Updated this line
+
+            var reviewsFound = false;
+
+            reviews.forEach(function (review) {
+                var rating = review.getAttribute("data-rating");
+
+                if (selectedRating === "all" || selectedRating === rating) {
+                    review.style.display = "block";
+                    reviewsFound = true;
+                } else {
+                    review.style.display = "none";
+                }
+            });
+
+            // Show or hide the "No reviews found" message based on reviewsFound
+            if (reviewsFound) {
+                noReviewsContainer.style.display = "none"; // Updated this line
+            } else {
+                noReviewsContainer.style.display = "block"; // Updated this line
+            }
+        }
+
+
+
+        // Function to handle the delete confirmation
+        function confirmDelete(event) {
+            if (!confirm('Are you sure you want to delete this review?')) {
+                event.preventDefault(); // Prevent the default action (deletion) if the user cancels
+            }
+        }
+
+        // Attach an event listener to all "Delete" buttons
+        var deleteButtons = document.querySelectorAll(".delete-button");
+        deleteButtons.forEach(function (button) {
+            button.addEventListener("click", confirmDelete);
+        });
+
+        // Attach an event listener to the rating filter dropdown
+        document.getElementById("rating-filter").addEventListener("change", filterReviewsByRating);
+
+        // Call the filter function and attach the event listener after the page loads
+        window.addEventListener("load", function () {
+            filterReviewsByRating();
+        });
+    </script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,196 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussions</title>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cbdcf8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack contents vertically on smaller screens */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+            font-size: 36px; /* Increase the font size for the h1 heading */
+            text-transform: uppercase; /* Convert text to uppercase */
+            letter-spacing: 2px; /* Add some letter spacing for better readability */
+        }
+
+        .content {
+            display: flex;
+            flex: 1; /* Allow the content to take up all available vertical space */
+        }
+
+        .left-half {
+            flex: 2; /* Adjust the width of the left half to 75% */
+            padding: 20px;
+            display: flex;
+            flex-direction: column; /* Center contents vertically */
+            align-items: flex-start; /* Align contents to the left of the left-half */
+        }
+
+        .right-half {
+            flex: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounce 5s infinite; /* Add the bounce animation */
+        }
+
+        /* Define the bounce animation */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0); /* Initial and final position */
+            }
+            40% {
+                transform: translateY(-20px); /* Bounce up */
+            }
+            60% {
+                transform: translateY(-10px); /* Bounce down */
+            }
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px;
+        }
+
+        ul {
+            list-style: none;
+            /* padding: 0; */
+        }
+
+        a{
+            text-decoration: none;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        .left-half ul {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto;
+        }
+
+        li {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px 20px; /* Increase the top and bottom margin */
+            padding: 20px;
+            text-align: left; /* Left-align discussions */
+            width: 100%; /* Make li elements take up the full width of the left-half */
+            transition: background-color 0.3s ease, width 0.3s ease, height 0.3s ease; /* Add width and height to the transition */
+        }
+
+        li:hover {
+            transform: scale(1.03); /* Increase size slightly on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a larger shadow on hover */
+        }
+
+        h2 {
+            color: #007BFF;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        p.created-info {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+            a.button {
+                font-size: 14px;
+                margin: 10px 0; /* Add margin above and below the button */
+            }
+            li {
+                padding: 10px;
+                margin: 10px 0; /* Add margin above and below the list items */
+            }
+            h2 {
+                font-size: 20px;
+            }
+            p {
+                font-size: 14px;
+            }
+            p.created-info {
+                font-size: 12px;
+            }
+            .content {
+                flex-direction: column; /* Stack the content vertically on small screens */
+            }
+
+            .left-half {
+                flex: 1; /* Adjust the width of the left half to 100% on small screens */
+                order: 2; /* Change the order to make it appear below the right half */
+                margin-top: 20px; /* Add some space between the two halves */
+                align-items: center;
+            }
+
+            .right-half {
+                flex: 1; /* Adjust the width of the right half to 100% on small screens */
+                order: 1; /* Change the order to make it appear above the left half */
+            }
+
+            /* Adjust the width and margin of list items for smaller screens */
+            li {
+                width: 90%; /* Reduce the width of list items */
+                align-items: center;
+            }
+            ul{
+            padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Discussions</h1>
+    <div class="content">
+        <div class="left-half">
+            <a href="{% url 'add_discussion' %}" class="button">Create New Discussion</a>
+            <ul>
+                {% for discussion in discussions %}
+                    <li>
+                        <h2><a href="{% url 'discussion_detail' discussion.id %}">{{ discussion.title }}</a></h2>
+                        <p class="created-info">Created by: {{ discussion.user.username }} | {{ discussion.created_at }}</p>
+                        <p>{{ discussion.content }}</p>
+                    </li>
+                {% empty %}
+                    <li>No discussions yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="right-half">
+            <dotlottie-player src="https://lottie.host/ca1289f1-11b4-4f2f-a1ea-6246f6692952/CeO39eY5Kg.json" background="transparent" speed="1" style="width: 400px; height: 400px" direction="1" mode="normal" loop autoplay></dotlottie-player>
+        </div>
+    </div>
+</body>
+</html>

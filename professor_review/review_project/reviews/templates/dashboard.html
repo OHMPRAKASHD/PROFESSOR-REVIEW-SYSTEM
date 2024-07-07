@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        body {
+            background-color: #b3cdfb;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .left-half {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            padding: 20px;
+        }
+
+        .right-half {
+            width: 50%;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 22px;
+            font-weight: 600;
+            color: rgb(60, 56, 56);
+            margin-top: 20px;
+        }
+
+        .dotlottie-container {
+            max-width: 90%; /* Ensure the container doesn't exceed its parent's width */
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .left-half, .right-half {
+                width: 100%;
+                text-align: center;
+            }
+
+            .button {
+                margin: 10px 0;
+            }
+
+            .dotlottie-container {
+                width: 100%; /* Make the container take full width on smaller screens */
+                max-height: 300px; /* Adjust the maximum height as needed */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-half">
+        <p class="quote">Join the Discussion, Where Brain Cells Collide!</p>
+        <a href="{% url 'discussion_list' %}" class="button">DISCUSSIONS</a>
+        <br>
+        <p class="quote">Meet Our Brainy Professors - They Know Everything (Almost)!</p>
+        <a href="{% url 'teacher_list' %}" class="button">PROFESSORS</a>
+        <br>
+        <p class="quote">Ready to Chat? We're as Fast as a Cheetah on Caffeine!</p>
+        <a href="#" class="button">LIVE CHAT</a>
+    </div>
+    
+    <div class="right-half">
+        <div class="dotlottie-container">
+            <dotlottie-player src="https://lottie.host/aa9bc5eb-5f96-485d-ad1c-56d690e3d6c2/sjnnQdROHg.json" background="transparent" speed="1" style="width: 100%; height: 100%" direction="1" mode="normal" loop autoplay></dotlottie-player>
+        </div>
+    </div>
+</body>
+</html>

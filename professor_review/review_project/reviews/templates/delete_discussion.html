@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ... (your head content) ... -->
+</head>
+<body>
+    <h1>Delete Discussion</h1>
+    <p>Are you sure you want to delete this discussion?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+        <a href="{% url 'discussion_detail' discussion.id %}" class="button">Cancel</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Discussion</title>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cbdcf8; /* Change background color if needed */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row; /* Change to row to split into left and right halves */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .left-half {
+            flex: 1; /* Take up 50% of the width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right-half {
+            flex: 1; /* Take up 50% of the width */
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 600px; /* Increase the container width as needed */
+            text-align: center;
+            margin: 50px 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            color: #333;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        form label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #007BFF; /* Change border style if needed */
+            outline: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        .cool-link {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .cool-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #007BFF;
+            bottom: -2px;
+            left: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .cool-link:hover::before {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                margin: 0;
+                flex-direction: column; /* Change to column for smaller screens */
+                align-items: center;
+            }
+
+            .container {
+                padding: 20px;
+                max-width: 100%; /* Adjust the max-width to fill the screen */
+                margin-top: 20px; /* Add margin to separate image and content on smaller screens */
+            }
+
+            .left-half {
+                margin-bottom: 20px; /* Add margin to separate image and content on smaller screens */
+                order: 1; /* Reverse the order of display for smaller screens */
+            }
+
+            .right-half {
+                order: 2; /* Reverse the order of display for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-half">
+        <dotlottie-player src="https://lottie.host/f4a569f3-3ee0-435b-b22f-f789c331c97b/e0ZzEBbJGu.json" background="transparent" speed="1" style="width: 100%; height: 100%" direction="1" mode="normal" loop autoplay></dotlottie-player>
+    </div>
+    <div class="right-half">
+        <div class="container">
+            <h1>Create New Discussion</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="button-container"> 
+                    <button type="submit">Create Discussion</button>
+                    <a href="{% url 'discussion_list' %}" class="button">Back to Discussions</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

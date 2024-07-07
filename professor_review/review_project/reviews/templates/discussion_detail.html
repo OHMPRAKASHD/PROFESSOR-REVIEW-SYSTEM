@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ discussion.title }}</title>
+    <style>
+        body, h1, h2, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cbdcf8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        p.author-info {
+            font-size: 14px;
+            color: #777;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a larger shadow on hover */
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        .delete-confirmation {
+            font-size: 16px;
+            color: red;
+        }
+
+        .back-button {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .logo-button {
+            text-decoration: none;
+        }
+
+        .edit-image,
+        .delete-image{
+            width: 20px; 
+            height: 20px; 
+        }
+
+        .submit-image {
+            width: 32px; 
+            height: 32px; 
+        }
+
+        .reply-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+
+        .reply-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .reply-text-box {
+            flex-grow: 1;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            height: 20px;
+        }
+
+        .submit-wrapper {
+            margin-left: 10px; 
+            cursor: pointer;
+        }
+
+        p.author-info {
+            font-size: 12px; /* Reduced font size */
+            color: #777; /* Grey color */
+        }
+
+        /* Small screens (phones) */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .reply-text-box {
+                width: 100%;
+            }
+        }
+
+        /* Medium screens (tablets) */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        /* Large screens (desktops) */
+        @media (min-width: 1025px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>
+        {{ discussion.title }}
+        {% if user == discussion.user %}
+            <div id="discussion-buttons">
+                <a href="{% url 'edit_discussion' discussion.id %}" class="logo-button">
+                    <img class="edit-image" src="{% static 'images/EDIT LOGO.png' %}" alt="Edit Logo" style="margin-left: 10px;">
+                </a>
+                <a href="{% url 'delete_discussion' discussion.id %}" class="logo-button" onclick="return showDeleteConfirmation();">
+                    <img class="delete-image" src="{% static 'images/DELETE LOGO.png' %}" alt="Delete Logo">
+                </a>
+            </div>
+        {% endif %}
+    </h1>
+
+    <p>{{ discussion.content }}</p>
+    <p class="author-info">Created by: {{ discussion.user.username }} | {{ discussion.created_at }}</p>
+
+    <div class="reply-container">
+        <h2>Add Reply</h2>
+        <form method="post" id="reply-form">
+            {% csrf_token %}
+            <div class="reply-input">
+                <input type="text" name="{{ reply_form.content.name }}" class="reply-text-box" placeholder="Add your reply here" required>
+                <div class="submit-wrapper">
+                    <img class="submit-image" src="{% static 'images/SUBMIT LOGO.png' %}" alt="Submit Logo">
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <h2>Replies</h2>
+    
+    <ul>
+        {% for reply in discussion.replies.all %}
+        <li>
+            <p>{{ reply.content }}</p>
+            <p class="author-info">Replied by: {{ reply.user.username }} | {{ reply.created_at }}</p>
+            {% if reply.user == user %}
+                <a href="{% url 'edit_reply' discussion.id reply.id %}" class="logo-button">
+                    <img class="edit-image" src="{% static 'images/EDIT LOGO.png' %}" alt="Edit reply">
+                </a>
+                <a href="{% url 'delete_reply' discussion.id reply.id %}" class="logo-button" onclick="return showDeleteConfirmation();">
+                    <img class="delete-image" src="{% static 'images/DELETE LOGO.png' %}" alt="Delete reply">
+                </a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No replies yet.</li>
+    {% endfor %}
+    </ul>
+    
+
+    <a href="{% url 'discussion_list' %}" class="button">Back to Discussions</a>
+
+    <script>
+        function showDeleteConfirmation() {
+            if (confirm("Are you sure you want to delete this?")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const submitImage = document.querySelector(".submit-image");
+            const replyForm = document.getElementById("reply-form");
+
+            submitImage.addEventListener("click", function () {
+                replyForm.submit();
+            });
+        });
+    </script>
+</body>
+</html>

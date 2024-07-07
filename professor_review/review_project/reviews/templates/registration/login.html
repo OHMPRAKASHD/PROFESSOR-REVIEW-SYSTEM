@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ddbcf8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row; /* Change to row to split into left and right halves */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .left-half {
+            flex: 1; /* Take up 50% of the width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right-half {
+            flex: 1; /* Take up 50% of the width */
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            margin: 50px auto 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            color: #333;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #007BFF;
+            outline: none;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .cool-link {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .cool-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #007BFF;
+            bottom: -2px;
+            left: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .cool-link:hover::before {
+            width: 100%;
+        }
+        
+        .left-half img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .dotlottie-container {
+            max-width: 70%; /* Ensure the container doesn't exceed its parent's width */
+        }
+
+        @media (max-width: 768px) {
+            body {
+                margin: 0;
+                flex-direction: column; /* Change to column for smaller screens */
+                align-items: center;
+            }
+
+            .container {
+                padding: 20px;
+                max-width: 100%; /* Adjust the max-width to fill the screen */
+                margin-top: 20px; /* Add margin to separate image and content on smaller screens */
+            }
+
+            .left-half {
+                margin-bottom: 20px; /* Add margin to separate image and content on smaller screens */
+                order: 1; /* Reverse the order of display for smaller screens */
+            }
+
+            .right-half {
+                order: 2; /* Reverse the order of display for smaller screens */
+            }
+
+            .dotlottie-container {
+                width: 100%; /* Make the container take full width on smaller screens */
+                max-height: 300px; /* Adjust the maximum height as needed */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-half">
+        <dotlottie-player src="https://lottie.host/703b4bb6-0e81-4ccb-9148-239fd7e37b33/cYngdFcDyH.json" background="transparent" speed="1" style="width: 100%; height: 100%" direction="1" mode="normal" loop autoplay></dotlottie-player>
+    </div>
+    <div class="right-half">
+        <div class="container">
+            <h1>Login</h1>
+            <form method="post">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="error">
+                        <p>Invalid username or password.</p>
+                    </div>
+                {% endif %}
+                
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <input type="submit" value="Login">
+                <br>
+                <br>
+                <a href="{% url 'register'%}" class="cool-link">New to this world?</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
